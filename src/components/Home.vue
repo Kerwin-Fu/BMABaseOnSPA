@@ -11,7 +11,8 @@
     <!-- 页面主体 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside :width="isCollapse? '64px' : '200px' ">
+        <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- 侧边栏菜单 -->
         <el-menu
           background-color="#333744"
@@ -19,6 +20,9 @@
           active-text-color="#ffd04b"
           unique-opened
           border="none"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -35,7 +39,7 @@
             </template>
             <!-- 二级子菜单 -->
             <el-menu-item
-              index="subItem + '' "
+              :index=" '/' + subItem.path "
               v-for="subItem in item.children"
               :key="subItem.id"
             >
@@ -51,7 +55,10 @@
         </el-menu>
       </el-aside>
       <!-- 右侧主体 -->
-      <el-main>Main </el-main>
+      <el-main>
+        <router-view></router-view>
+        
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -68,6 +75,7 @@ export default {
         102: "iconfont icon-danju",
         145: "iconfont icon-baobiao",
       },
+      isCollapse: false
     };
   },
   created() {
@@ -77,6 +85,9 @@ export default {
     logout() {
       window.sessionStorage.removeItem("token");
       this.$router.push("./login");
+    },
+    toggleCollapse() {
+      this.isCollapse = !this.isCollapse
     },
     async getMenuList() {
       const { data: res } = await this.$http.get("menus");
