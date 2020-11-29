@@ -23,6 +23,7 @@
           :collapse="isCollapse"
           :collapse-transition="false"
           router
+          :default-active="activePath"
         >
           <!-- 一级菜单 -->
           <el-submenu
@@ -42,6 +43,7 @@
               :index=" '/' + subItem.path "
               v-for="subItem in item.children"
               :key="subItem.id"
+              @click="saveNavState( '/' + subItem.path )"
             >
               <!-- 二级菜单模板 -->
               <template slot="title">
@@ -75,11 +77,13 @@ export default {
         102: "iconfont icon-danju",
         145: "iconfont icon-baobiao",
       },
-      isCollapse: false
+      isCollapse: false,
+      activePath: ''
     };
   },
   created() {
     this.getMenuList();
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     logout() {
@@ -88,6 +92,11 @@ export default {
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
+    },
+    saveNavState(path) {
+      window.sessionStorage.setItem('activePath',path)
+      this.activePath = path
+
     },
     async getMenuList() {
       const { data: res } = await this.$http.get("menus");
