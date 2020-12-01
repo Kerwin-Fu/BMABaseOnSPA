@@ -397,6 +397,10 @@ if (document.querySelectorAll('.el-card tbody tr').length === 1) {
   //   创建页面时刷新列表
   created() {
     this.getUserList();
+    console.log('小伙子你不讲武德');
+    console.log('来骗，来偷袭');
+    console.log('我一个69岁的，老程序员')
+    console.log('这好吗，这不好')
   },
 };
 </script>
