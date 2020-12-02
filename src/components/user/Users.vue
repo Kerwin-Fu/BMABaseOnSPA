@@ -340,6 +340,7 @@ export default {
     },
     // 改变用户当前状态
     async userStateChanged(row) {
+      console.log(row);
       const { data: res } = await this.$http.put(
         `users/${row.id}/state/${row.mg_state}`
       );

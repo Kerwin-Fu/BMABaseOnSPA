@@ -16,7 +16,7 @@
           <el-button type="primary">添加角色</el-button>
         </el-col>
       </el-row>
-      <!-- 角色列表区域 -->
+      <!-- NOTE角色列表区域 -->
       <el-table :data="rolelist" border stripe>
         <!-- 展开列 -->
         <el-table-column type="expand">
@@ -52,7 +52,7 @@
               
           </template>
         </el-table-column>
-        <!-- 索引列 -->
+        <!-- NOTE主索引列 -->
         <el-table-column label="#" type="index"></el-table-column>
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
         <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
@@ -66,7 +66,7 @@
       </el-table>
     </el-card>
 
-    <!-- 分配权限对话框 -->
+    <!-- NOTE分配权限弹出框 -->
     <el-dialog title="分配权限" :visible.sync="setRightDialogVisible" width="50%" @close="setRightDialogClosed">
      <!-- 树形控件 -->
       <el-tree :data="rightsList" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys" ref="treeRef"></el-tree>
@@ -99,7 +99,7 @@ export default {
     this.getRolesList()
   },
   methods: {
-    // 获取所有角色的列表
+    // NOTE获取所有角色的列表
     async getRolesList() {
       const { data: res } = await this.$http.get('roles')
       if (res.meta.status !== 200) {
@@ -107,7 +107,7 @@ export default {
       }
       this.rolelist = res.data
     },
-    //删除权限标签
+    //NOTE删除权限标签
     async removeRightById(role,id) {
       const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -124,7 +124,7 @@ export default {
        }
        role.children = res.data
     },
-    //点击分配权限按钮
+    //NOTE点击分配权限按钮
   async  showRightDialogVisible(role) {
     this.roleId = role.id
       const {data:res} = await this.$http.get('rights/tree') 
@@ -135,7 +135,7 @@ export default {
       this.getLeafKeys(role, this.defKeys)
       this.setRightDialogVisible = true
     },
-    // 通过递归的形式，获取角色下所有三级权限的 ID，并保存到 defKeys 中
+    // NOTE通过递归的形式，获取角色下所有三级权限的 ID，并保存到 defKeys 中
     getLeafKeys(node, arr) {
       if (!node.children) {
         // 没有 children 证明这儿就是三级节点
@@ -146,7 +146,7 @@ export default {
     setRightDialogClosed() {
       this.defKeys = []
     },
-    // 点击为角色分配权限
+    // NOTE点击为角色分配权限
     async allotRights() {
       const keys = [
         ...this.$refs.treeRef.getCheckedKeys(),
