@@ -50,7 +50,26 @@
                   v-for="(item, i) in scope.row.attr_vals"
                   :key="i"
                   closable
+                  @close="handleClose(i, scope.row)"
                   >{{ item }}</el-tag
+                >
+                <!-- 输入的文本框 -->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)"
+                ></el-input>
+                <!-- 添加的按钮 -->
+                <el-button
+                  v-else
+                  class="button-new-tag"
+                  size="small"
+                  @click="showInput(scope.row)"
+                  >+ New Tag</el-button
                 >
               </template>
             </el-table-column>
@@ -91,7 +110,35 @@
           >
           <el-table :data="onlyTableData" border stripe>
             <!-- 展开行的操作 -->
-            <el-table-column type="expand"></el-table-column>
+            <el-table-column type="expand">
+              <template slot-scope="scope">
+                <el-tag
+                  v-for="(item, i) in scope.row.attr_vals"
+                  :key="i"
+                  closable
+                  @close="handleClose(i, scope.row)"
+                  >{{ item }}</el-tag
+                >
+                <!-- 输入的文本框 -->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)"
+                ></el-input>
+                <!-- 添加的按钮 -->
+                <el-button
+                  v-else
+                  class="button-new-tag"
+                  size="small"
+                  @click="showInput(scope.row)"
+                  >+ New Tag</el-button
+                >
+              </template>
+            </el-table-column>
             <!-- 索引列 -->
             <el-table-column type="index"></el-table-column>
             <el-table-column
@@ -252,6 +299,10 @@ export default {
       res.data.forEach((item) => {
         // ''.split(' ') => ['']
         item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
+        // 控制文本框的显示与隐藏
+        item.inputVisible = false;
+        // 文本框中输入的值
+        item.inputValue = "";
       });
       if (res.meta.status !== 200) {
         return this.$message.error("获取参数列表失败");
@@ -350,6 +401,47 @@ export default {
       this.$message.success("删除成功");
       this.getParamsData();
     },
+    // 文本框失去焦点或 Enter
+    async handleInputConfirm(row) {
+      if (row.inputValue.trim().length === 0) {
+        row.inputValue = "";
+        row.inputVisible = false;
+        return false;
+      }
+      row.attr_vals.push(row.inputValue.trim());
+      row.inputValue = "";
+      row.inputVisible = false;
+      this.saveAttrVals(row)
+    },
+    async saveAttrVals(row) {
+       // 发情请求，保存这次操作
+      const { data: res } = await this.$http.put(
+        `categories/${this.cateId}/attributes/${row.attr_id}`,
+        {
+          attr_name: row.attr_name,
+          attr_sel: row.attr_sel,
+          attr_vals: row.attr_vals.join(" "),
+        }
+      );
+      if (res.meta.status !== 200) {
+        return this.$message.error("添加参数项失败");
+      }
+      this.$message.success("操作成功");
+    },
+    // 点击按钮展示输入文本框
+    showInput(row) {
+      row.inputVisible = true;
+      // 让文本框自动获得焦点
+      // $nextTick: 当页面上的元素被重新渲染之后，才会执行回调函数中的代码
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      })
+    },
+    // 删除对应的参数和选项
+    async handleClose(i, row) {
+      row.attr_vals.splice(i, 1)
+      this.saveAttrVals(row)
+    }
   },
   created() {
     this.getCateList();
@@ -381,9 +473,18 @@ export default {
     selectedCateKeys() {
       console.log(`监听到` + this.selectedCateKeys);
     },
-  },
-};
+  }
+}
 </script>
 
 <style lang="less" scoped>
+.cat_opt {
+  margin: 15px 0;
+}
+.el-tag {
+  margin: 0 10px;
+}
+.input-new-tag {
+  width: 120px;
+}
 </style>
