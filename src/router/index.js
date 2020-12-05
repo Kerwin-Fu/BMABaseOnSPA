@@ -8,6 +8,8 @@ import Rights from "../components/Power/Rights.vue"
 import Roles from "../components/Power/Roles.vue"
 import Cates from "../components/goods/Cates.vue"
 import Params from "../components/goods/Params.vue"
+import Goods from "../components/goods/Goods.vue"
+import Add from "../components/goods/Add.vue"
 
 Vue.use(VueRouter);
 
@@ -25,6 +27,12 @@ const router = new VueRouter({
         { path: '/roles', component: Roles},
         { path: '/categories', component: Cates},
         { path: '/params', component: Params},
+        { path: '/goods', component: Goods},
+        {
+          // 注意这种写法和直接把 /add 当做 /goods 的子路由是不一样的
+          path: '/goods/add',
+          component: Add
+        }
 
     ]},
   ],

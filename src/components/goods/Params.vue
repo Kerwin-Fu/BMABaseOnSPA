@@ -294,7 +294,6 @@ export default {
           },
         }
       );
-      console.log(res.data);
       // 对参数下的可选项数据进行加工
       res.data.forEach((item) => {
         // ''.split(' ') => ['']
@@ -312,10 +311,6 @@ export default {
       } else {
         this.onlyTableData = res.data;
       }
-      console.log(`有变动时接收到的数据👇`);
-      console.log(res.data);
-      console.log(`有变动时接收到的三级id👇`);
-      console.log(this.selectedCateKeys);
     },
     //添加框关闭时👇
     addDialogClosed() {
@@ -468,12 +463,8 @@ export default {
         return "静态属性";
       }
     },
-  },
-  watch: {
-    selectedCateKeys() {
-      console.log(`监听到` + this.selectedCateKeys);
-    },
   }
+
 }
 </script>
 
