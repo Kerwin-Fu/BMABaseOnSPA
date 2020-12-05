@@ -207,18 +207,19 @@ export default {
     },
     // 图片预览
     handlePreview(file) {
+            console.log(file);
       this.previewPath = file.response.data.url
       this.previewVisible = true
     },
     // 图片删除
     handleRemove(file) {
+
       // 获取将要删除的图片的临时路径
       const filePath = file.response.data.tmp_path
       // 从 pics 数组中，找到这个图片对应的索引值
       const i = this.addForm.pics.findIndex(x => x.pic === filePath)
       // 调用数组的 splice 方法，把图片信息对象从 pics 数组中移出
       this.addForm.pics.splice(i, 1)
-      console.log(this.addForm.pics)
     },
     // 图片上传成功
     handleSuccess(response) {
@@ -236,6 +237,7 @@ export default {
         // 执行添加的业务逻辑
         // 深拷贝，防止影响原来的 goods_cat，视图中的 goods_cat 需要的还是数组
         const form = _.cloneDeep(this.addForm)
+        console.log(form.goods_cat);
         form.goods_cat = form.goods_cat.join(',')
         this.manyTableData.forEach(item => {
           const newInfo = {
