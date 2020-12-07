@@ -46,7 +46,8 @@
               size="mini"
               type="success"
               icon="el-icon-location"
-            ></el-button>
+              @click="showProgressBox">
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,6 +92,16 @@
         >
       </span>
     </el-dialog>
+    <!-- 物流进度对话框 -->
+    <el-dialog title="物流信息" :visible.sync="progressVisible" width="50%">
+      <el-timeline>
+        <el-timeline-item
+          v-for="(activity, index) in progressInfo"
+          :key="index"
+          :timestamp="activity.time"
+        >{{activity.context}}</el-timeline-item>
+      </el-timeline>
+    </el-dialog>
   </div>
 </template>
 
@@ -120,6 +131,8 @@ export default {
         ],
       },
       cityData,
+      progressVisible: false,
+      progressInfo: []
     };
   },
   created() {
@@ -151,10 +164,22 @@ export default {
     },
     addressDialogClosed() {
       this.$refs.addressFormRef.resetFields()
+    },
+    // 展示物流进度对话框
+    async showProgressBox() {
+      // const { data: res } = await this.$http.get('kuaidi/804909574412544580')
+      // if (res.meta.status !== 200) {
+      //   return this.$message.error('获取物流信息失败')
+      // }
+      // this.progressInfo = res.data
+      this.progressVisible = true
     }
   },
 };
 </script>
 
 <style lang="less" scoped>
+.el-cascader {
+  width: 100%;
+}
 </style>

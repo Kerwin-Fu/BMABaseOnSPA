@@ -11,6 +11,7 @@ import Params from "../components/goods/Params.vue"
 import Goods from "../components/goods/Goods.vue"
 import Add from "../components/goods/Add.vue"
 import Orders from "../components/Orders/Orders.vue"
+import Report from '../components/Report/Report.vue'
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,7 @@ const router = new VueRouter({
         { path: '/params', component: Params},
         { path: '/goods', component: Goods},
         { path: '/orders', component: Orders},
+        { path: '/reports', component: Report},
         {
           // 注意这种写法和直接把 /add 当做 /goods 的子路由是不一样的
           path: '/goods/add',
